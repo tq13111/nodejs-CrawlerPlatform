@@ -1,19 +1,24 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express')
+const router = express.Router()
 const UserService=require('../services/user_service')
 
+
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.render('user', {
-      users:  UserService.getAllUsers()
-    }
-  )
+router.get('/',  function(req, res, next) {
+  (async ()=>{
+    const a=await UserService.getAllUsers()
+    res.render('users', {
+        users: a
+      }
+    )
+  })()
+
 });
 
 
-router.get('/:userId', function(req, res, next) {
+router.get('/:userId',async function(req, res, next) {
   const userId = req.params.userId
-  const user = UserService.getUserById(Number(userId))
+  const user = await UserService.getUserById(userId)
   res.locals.user = user
   res.render('user')
 });

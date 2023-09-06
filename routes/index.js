@@ -1,5 +1,5 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express')
+const router = express.Router()
 const User=require('../models/in_memo/user');
 const UserService=require('../services/user_service')
 /* GET home page. */
