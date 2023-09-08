@@ -24,11 +24,11 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use(errorhandler());
 
-// process.on('uncaughtException',(err)=>{
-//
-// })
-// process.on( 'unhandledReject ',(reason,p)=>{
-//
-// })
+process.on('uncaughtException',(err)=>{
+
+})
+process.on( 'unhandledReject ',(reason,p)=>{
+
+})
 
 module.exports = app;
