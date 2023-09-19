@@ -21,5 +21,4 @@ const logger =new(Logger)({
     })
   ]
 })
-logger.error('yyy')
 module.exports =logger
