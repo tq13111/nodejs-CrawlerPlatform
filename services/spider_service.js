@@ -5,7 +5,6 @@ const HTTPReqParamError = require(
 const HTTPBaseError = require('../errors/http_base_error');
 const logger = require('../utils/loggers/log_handler');
 const Content = require('../models/mongoose/content.js');
-// const ESService = require('../services/es_service');
 const axios = require('axios');
 
 /**
@@ -43,10 +42,14 @@ async function registerSpider(spider) {
       }
     },
   };
-
+  console.log( spider,'spider1')
+  console.log(typeof spider,'spider')
   const keys = Object.keys(validations);
   for (let i = 0; i < keys.length; i += 1) {
     const k = keys[i];
+    console.log(k,'k')
+    console.log(spider[k],'spider[k]')
+
     validations[k](spider[k]);
   }
 
@@ -65,7 +68,6 @@ async function registerSpider(spider) {
       'error validating spider validation url',
     );
   });
-
   if (res && res.data) {
     const spiderServiceResponseValidation = {
       code: (code) => {
@@ -169,6 +171,7 @@ async function startFetchingProcess(spider) {
 
   async function fetch(startTime, lastId) {
     const list = await fetchingLists(url, lastId, pageSizeLimit);
+    console.log(list,'list')
     const upsertPromises = [];
     const wrappedContent = list.map((c) => {
       const wrapped = {
@@ -199,8 +202,11 @@ async function startFetchingProcess(spider) {
         );
       });
 
-    latestId = wrappedContent[wrappedContent.length -
-    1].spiderServiceContentId;
+    if(wrappedContent.length > 0) {
+      latestId = wrappedContent[wrappedContent.length -
+      1].spiderServiceContentId;
+    }
+
 
     spider.lastestId = latestId;
     await spider.save()
@@ -209,7 +215,6 @@ async function startFetchingProcess(spider) {
       return;
     }
 
-    // ESService.createOrUpdateContents(insertedOrUpdatedList);
 
     const endTime = Date.now().valueOf();
     const timePassed = endTime - startTime;

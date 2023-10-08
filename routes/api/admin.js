@@ -8,6 +8,7 @@ router.route('/spider')
   .post((req, res, next) => {
     (async () => {
       const { service } = req.body;
+      console.log(req.body,'req.body')
       const createdSpider = await SpiderService.registerSpider(service);
       return {
         spider: createdSpider,

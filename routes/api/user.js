@@ -2,6 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 const UserService = require('../../services/user_service');
+const SubscriptionService = require('../../services/subscription_service');
 const apiRes = require('../../utils/api_response');
 const auth = require('../../middlewares/auth');
 

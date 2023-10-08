@@ -1,25 +1,52 @@
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
-const ObjectId = Schema.Types.objectid
+const mongoose = require('mongoose');
+
+const { Schema } = mongoose;
+const { ObjectId } = Schema.Types;
+
 const SubSchema = new Schema({
-  userId:
-    {
-      type: ObjectId, require: true,
-      unique: true, index: 1
-    },
-  url: {type: String,  require: true,}
-})
-const SubModel = mongoose.model('sub', SubSchema)
+  userId: { type: ObjectId, required: true, index: 1 },
+  type: {
+    type: String,
+    enum: ['spider_service', 'tag'],
+    required: true,
+  },
+  sourceId: {
+    type: ObjectId,
+    required: true,
+  },
+});
 
+const SubModel = mongoose.model('Sub', SubSchema);
 
-async function insert(user) {
-  return  SubModel.create(user)
+async function insert(sub) {
+  const created = await SubModel.create(sub);
+  return created;
 }
 
-async function getOneById(id) {
-  return await SubModel.findOne({userId: id})
+async function list(params) {
+  const match = {};
+  const flow = SubModel.find(match);
+  const subs = await flow.exec();
+  return subs;
 }
 
-module.exports ={
-  insert,getOneById,getOneByName,list
+async function findByUserId(userId) {
+  const subs = await SubModel.find({ userId });
+  return subs;
 }
+
+async function upsert(sub) {
+  const upserted = await SubModel.findOneAndUpdate(sub, sub, {
+    new: true,
+    upsert: true,
+  });
+  return upserted;
+}
+
+module.exports = {
+  model: SubModel,
+  insert,
+  upsert,
+  list,
+  findByUserId,
+};
